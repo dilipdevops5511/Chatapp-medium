@@ -14,13 +14,27 @@ mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 10000, // 10 seconds timeout
   })
   .then(() => {
-    console.log("DB Connetion Successfull");
+    console.log("DB Connection Successful");
   })
   .catch((err) => {
-    console.log(err.message);
+    console.error("DB Connection Error:", err.message);
   });
+
+// Additional connection event listeners
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to DB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error(`Mongoose connection error: ${err.message}`);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected from DB');
+});
 
 app.get("/ping", (_req, res) => {
   return res.json({ msg: "Ping Successful" });
@@ -29,9 +43,10 @@ app.get("/ping", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-const server = app.listen(process.env.PORT, () =>
-  console.log(`Server started on ${process.env.PORT}`)
-);
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Server started on ${process.env.PORT}`);
+});
+
 const io = socket(server, {
   cors: {
     origin: "http://localhost:3000",
