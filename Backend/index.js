@@ -3,24 +3,24 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
-const AWS = require('aws-sdk');
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 require("dotenv").config();
 
-// Set the AWS region
-AWS.config.update({ region: 'us-east-1' });
+const app = express();
+const socket = require("socket.io");
 
-// Create a Secrets Manager client
-const secretsManager = new AWS.SecretsManager();
+// Set the AWS region
+const client = new SecretsManagerClient({
+  region: 'us-east-1'
+});
 
 // Specify the secret name
 const secretName = 'Mongo';
 
 // Retrieve the secret value
-secretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
-  if (err) {
-    console.error(`Error retrieving secret: ${err}`);
-  } else {
-    // Parse and use the secret data
+const getSecret = async () => {
+  try {
+    const data = await client.send(new GetSecretValueCommand({ SecretId: secretName }));
     const secretData = JSON.parse(data.SecretString);
     console.log('Secret Data:', secretData);
 
@@ -32,20 +32,18 @@ secretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
     })
     .then(() => {
       console.log('MongoDB connection successful');
-
       // Start the Express.js server after MongoDB connection is established
       startServer(secretData.PORT);
     })
     .catch((err) => {
       console.error('Error connecting to MongoDB:', err);
     });
+  } catch (err) {
+    console.error(`Error retrieving secret: ${err}`);
   }
-});
+};
 
-function startServer(PORT) {
-  const app = express();
-  const socket = require("socket.io");
-
+const startServer = (port) => {
   app.use(cors());
   app.use(express.json());
 
@@ -56,8 +54,8 @@ function startServer(PORT) {
   app.use("/api/auth", authRoutes);
   app.use("/api/messages", messageRoutes);
 
-  const server = app.listen(PORT, () => {
-    console.log(`Server started on ${PORT}`);
+  const server = app.listen(port, () => {
+    console.log(`Server started on ${port}`);
   });
 
   const io = socket(server, {
@@ -94,4 +92,8 @@ function startServer(PORT) {
   mongoose.connection.on('disconnected', () => {
     console.log('Mongoose disconnected from DB');
   });
-}
+};
+
+// Retrieve the secret and start the server
+getSecret();
+
