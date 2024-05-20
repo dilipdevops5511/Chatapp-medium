@@ -2,10 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: workshop
+  namespace: prod
   labels:
     role: frontend
-    env: demo
 spec:
   replicas: 1
   strategy:
