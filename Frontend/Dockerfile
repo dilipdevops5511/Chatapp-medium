@@ -39,7 +39,7 @@ RUN touch /var/run/nginx.pid \
 USER nginx
 
 # Expose the port nginx will run on
-EXPOSE 8080
+EXPOSE 3000
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

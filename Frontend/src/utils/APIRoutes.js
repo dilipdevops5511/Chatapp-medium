@@ -1,4 +1,5 @@
-export const host = process.env.REACT_APP_BACKEND_URL;
+export const host = process.env.REACT_APP_BACKEND_URL;docker build -t frontend .
+
 export const loginRoute = `${host}/api/auth/login`;
 export const registerRoute = `${host}/api/auth/register`;
 export const logoutRoute = `${host}/api/auth/logout`;
