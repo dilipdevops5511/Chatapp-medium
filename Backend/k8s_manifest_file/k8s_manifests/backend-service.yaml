@@ -1,13 +1,13 @@
----
 apiVersion: v1
 kind: Service
 metadata:
   name: backend
-  namespace: workshop
+  namespace: prod
 spec:
-  ports:
-  - port: 5000
-    protocol: TCP
-  type: ClusterIP
   selector:
-   role: backend
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
