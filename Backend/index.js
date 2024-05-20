@@ -3,34 +3,45 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 require("dotenv").config();
 
 const app = express();
 const socket = require("socket.io");
 
-// Retrieve MongoDB connection string and port from environment variables
-const mongoUrl = process.env.MONGO_URL;
-const port = process.env.PORT;
-
-if (!mongoUrl || !port) {
-  console.error("Error: MONGO_URL and PORT must be defined in the environment variables");
-  process.exit(1);
-}
-
-// Connect to MongoDB
-mongoose.connect(mongoUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 10000, // 10 seconds timeout
-})
-.then(() => {
-  console.log('MongoDB connection successful');
-  // Start the Express.js server after MongoDB connection is established
-  startServer(port);
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
+// Set the AWS region
+const client = new SecretsManagerClient({
+  region: 'us-east-1'
 });
+
+// Specify the secret name
+const secretName = 'Mongo';
+
+// Retrieve the secret value
+const getSecret = async () => {
+  try {
+    const data = await client.send(new GetSecretValueCommand({ SecretId: secretName }));
+    const secretData = JSON.parse(data.SecretString);
+    console.log('Secret Data:', secretData);
+
+    // Use the retrieved secret data to connect to MongoDB
+    mongoose.connect(secretData.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000, // 10 seconds timeout
+    })
+    .then(() => {
+      console.log('MongoDB connection successful');
+      // Start the Express.js server after MongoDB connection is established
+      startServer(secretData.PORT);
+    })
+    .catch((err) => {
+      console.error('Error connecting to MongoDB:', err);
+    });
+  } catch (err) {
+    console.error(`Error retrieving secret: ${err}`);
+  }
+};
 
 const startServer = (port) => {
   app.use(cors());
@@ -83,5 +94,6 @@ const startServer = (port) => {
   });
 };
 
-// Start the server
-startServer(port);
+// Retrieve the secret and start the server
+getSecret();
+
