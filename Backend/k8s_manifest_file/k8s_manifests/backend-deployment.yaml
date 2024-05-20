@@ -6,12 +6,12 @@ metadata:
   labels:
     app: backend
 spec:
-  replicas: 3  # Increase replicas for better availability
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 1  # To ensure smooth rolling updates
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: backend
@@ -23,26 +23,14 @@ spec:
       containers:
       - name: backend
         image: public.ecr.aws/t3p0g8h2/backend:latest
-        imagePullPolicy: IfNotPresent  # Only pull image if not already present
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
-        livenessProbe:
-          httpGet:
-            path: /ok
-            port: 5000
-          initialDelaySeconds: 10  # Increase initial delay to allow startup time
-          periodSeconds: 15  # Adjust probe interval based on application behavior
-        readinessProbe:
-          httpGet:
-             path: /ok
-             port: 5000
-          initialDelaySeconds: 15  # Increase initial delay to allow startup time
-          periodSeconds: 20  # Adjust probe interval based on application behavior
-          successThreshold: 1
-        resources:  # Add resource requests and limits for better resource management
+        resources:
           requests:
-            cpu: 100m  # Request 100 milli CPU
-            memory: 128Mi  # Request 128 MiB memory
+            cpu: 100m
+            memory: 128Mi
           limits:
-            cpu: 200m  # Limit to 200 milli CPU
-            memory: 256Mi  # Limit to 256 MiB memory
+            cpu: 200m
+            memory: 256Mi
+
