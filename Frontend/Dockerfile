@@ -38,7 +38,7 @@ RUN touch /var/run/nginx.pid \
 # Switch to nginx user
 USER nginx
 
-# Expose the port nginx will run on
+# Expose port 80 for Nginx
 EXPOSE 3000
 
 # Start nginx
