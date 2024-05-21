@@ -28,4 +28,4 @@ spec:
           - name: REACT_APP_BACKEND_URL
             value: "http://10.100.247.167:5000" # assuming backend service is on port 8080
         ports:
-        - containerPort: 3000
+        - containerPort: 8080

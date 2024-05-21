@@ -7,7 +7,7 @@ spec:
   selector:
     role: frontend
   ports:
-    - port: 3000  # External port
-      targetPort: 3000  # Internal port
+    - port: 8080  # External port
+      targetPort: 8080  # Internal port
       protocol: TCP
   type: LoadBalancer
