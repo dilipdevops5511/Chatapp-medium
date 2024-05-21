@@ -60,7 +60,7 @@ const startServer = (port) => {
 
   const io = socket(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: "http://10.100.247.167:5000",
       credentials: true,
     },
   });
