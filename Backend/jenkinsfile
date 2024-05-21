@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/dilipdevops5511/Chatapp-medium.git'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                      -Dsonar.projectKey=Chat-app \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=http://100.24.253.147:9000 \
+                      -Dsonar.login=sqp_aaba7d2cdcf7d0ab6638b958c6c0e72944c4753a '''
+                }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage('Verify Dockerfile Presence') {
+            steps {
+                script {
+                    dir('Backend') {
+                        sh 'ls -l'
+                        sh 'cat Dockerfile'
+                    }
+                }
+            }
+        }
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    dir('Backend') {
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'aws'
+                        ]]) {
+                            withDockerRegistry(credentialsId: 'docker', toolName: 'docker') { 
+                                sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/t3p0g8h2"
+                                sh "docker build --no-cache -t backend:${env.BUILD_NUMBER} ."
+                                sh "docker tag backend:${env.BUILD_NUMBER} public.ecr.aws/t3p0g8h2/backend:${env.BUILD_NUMBER}"
+                                sh "docker push public.ecr.aws/t3p0g8h2/backend:${env.BUILD_NUMBER}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    dir('Backend/k8s_manifest_file/k8s_manifests') {
+                        sh "kubectl apply -f ."
+                    }
+                }
+            }
+        }
+    }
+}
