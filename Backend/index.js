@@ -48,7 +48,7 @@ const startServer = (port) => {
   app.use(express.json());
 
   app.get("/ping", (_req, res) => {
-    return res.json({ msg: "Ping Successful : )" });
+    return res.json({ msg: "You are selected as Devops Engineer" });
   });
 
   app.use("/api/auth", authRoutes);
