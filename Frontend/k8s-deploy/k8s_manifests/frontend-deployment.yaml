@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: public.ecr.aws/t3p0g8h2/frontend:latest
+        image: 637423531852.dkr.ecr.us-east-1.amazonaws.com/frontend:IMAGE_TAG_PLACEHOLDER
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
