@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk 17'
+        nodejs 'node16'
+    }
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'main', credentialsId: 'Github', url: 'https://github.com/dilipdevops5511/Chatapp-medium.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    dir('Frontend') {
+                        sh '''
+                            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 637423531852.dkr.ecr.us-east-1.amazonaws.com
+                            docker build -t frontend:${IMAGE_TAG} .
+                            docker tag frontend:${IMAGE_TAG} 637423531852.dkr.ecr.us-east-1.amazonaws.com/frontend:${IMAGE_TAG}
+                            docker push 637423531852.dkr.ecr.us-east-1.amazonaws.com/frontend:${IMAGE_TAG}
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Update Kubernetes Deployment') {
+            steps {
+                script {
+                    dir('Frontend/k8s-deploy/k8s_manifests') {
+                        sh """
+                            sed -i 's|IMAGE_TAG_PLACEHOLDER|${IMAGE_TAG}|g' frontend-deployment.yaml
+                            kubectl apply -f frontend-deployment.yaml
+                            kubectl apply -f .
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
