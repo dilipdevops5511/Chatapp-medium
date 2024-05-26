@@ -29,7 +29,7 @@ const startServer = () => {
 
   const io = socket(server, {
     cors: {
-      origin: "http://10.100.247.167:5000",
+      origin: "http://10.100.71.151:5000",
       credentials: true,
     },
   });
