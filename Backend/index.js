@@ -3,47 +3,16 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
-const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 require("dotenv").config();
 
 const app = express();
 const socket = require("socket.io");
 
-// Set the AWS region
-const client = new SecretsManagerClient({
-  region: 'us-east-1'
-});
+// Use environment variables for MongoDB URL and port
+const MONGO_URL = process.env.MONGO_URL;
+const PORT = process.env.PORT || 5000;
 
-// Specify the secret name
-const secretName = 'Mongo';
-
-// Retrieve the secret value
-const getSecret = async () => {
-  try {
-    const data = await client.send(new GetSecretValueCommand({ SecretId: secretName }));
-    const secretData = JSON.parse(data.SecretString);
-    console.log('Secret Data:', secretData);
-
-    // Use the retrieved secret data to connect to MongoDB
-    mongoose.connect(secretData.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 10000, // 10 seconds timeout
-    })
-    .then(() => {
-      console.log('MongoDB connection successful');
-      // Start the Express.js server after MongoDB connection is established
-      startServer(secretData.PORT);
-    })
-    .catch((err) => {
-      console.error('Error connecting to MongoDB:', err);
-    });
-  } catch (err) {
-    console.error(`Error retrieving secret: ${err}`);
-  }
-};
-
-const startServer = (port) => {
+const startServer = () => {
   app.use(cors());
   app.use(express.json());
 
@@ -54,8 +23,8 @@ const startServer = (port) => {
   app.use("/api/auth", authRoutes);
   app.use("/api/messages", messageRoutes);
 
-  const server = app.listen(port, () => {
-    console.log(`Server started on ${port}`);
+  const server = app.listen(PORT, () => {
+    console.log(`Server started on ${PORT}`);
   });
 
   const io = socket(server, {
@@ -94,6 +63,16 @@ const startServer = (port) => {
   });
 };
 
-// Retrieve the secret and start the server
-getSecret();
-
+// Connect to MongoDB and start the server
+mongoose.connect(MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 10000, // 10 seconds timeout
+})
+.then(() => {
+  console.log('MongoDB connection successful');
+  startServer();
+})
+.catch((err) => {
+  console.error('Error connecting to MongoDB:', err);
+});

@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: 637423531852.dkr.ecr.us-east-1.amazonaws.com/backend:11
+        image: 637423531852.dkr.ecr.us-east-1.amazonaws.com/backend:IMAGE_TAG_PLACEHOLDER
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
