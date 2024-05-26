@@ -51,7 +51,7 @@ const startServer = () => {
 
   // Additional connection event listeners
   mongoose.connection.on('connected', () => {
-    console.log('Mongoose connected to DB');
+    console.log('Mongoose connected to DBsss');
   });
 
   mongoose.connection.on('error', (err) => {
