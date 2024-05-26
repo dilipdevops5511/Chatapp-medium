@@ -70,7 +70,7 @@ mongoose.connect(MONGO_URL, {
   serverSelectionTimeoutMS: 10000, // 10 seconds timeout
 })
 .then(() => {
-  console.log('MongoDB connection successful');
+  console.log('MongoDB connection successfulllllllllllyyyyyy');
   startServer();
 })
 .catch((err) => {
