@@ -29,7 +29,7 @@ const startServer = () => {
 
   const io = socket(server, {
     cors: {
-      origin: "http://10.100.71.151:5000",
+      origin: "http://afa28a0f651494b25ad1144d6585ccd2-625886049.us-east-1.elb.amazonaws.com:8080",
       credentials: true,
     },
   });
