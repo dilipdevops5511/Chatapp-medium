@@ -1,5 +1,8 @@
 FROM node:16-alpine
 
+# Install curl
+RUN apk update && apk add curl
+
 # Set the working directory
 WORKDIR /app
 
