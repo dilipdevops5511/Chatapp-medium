@@ -6,7 +6,7 @@ metadata:
   labels:
     role: frontend
 spec:
-  replicas: 1
+  replicas: 5
   strategy:
     type: RollingUpdate
     rollingUpdate:
