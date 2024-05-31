@@ -7,6 +7,9 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
+        AWS_REGION = 'ap-south-1'
+        ECR_REPO_URL = '637423531852.dkr.ecr.ap-south-1.amazonaws.com'
+        DEPLOYMENT_YAML = 'Backend/k8s_manifest_file/k8s_manifests/backend-deployment.yaml'
     }
     stages {
         stage('Clean Workspace') {
@@ -23,10 +26,10 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonar-server') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                      -Dsonar.projectKey=Chat-app \
-                      -Dsonar.sources=. \
-                      -Dsonar.host.url=http://100.24.253.147:9000 \
-                      -Dsonar.login=sqp_aaba7d2cdcf7d0ab6638b958c6c0e72944c4753a '''
+  -Dsonar.projectKey=chat-app \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://13.233.231.215:9000 \
+  -Dsonar.token=sqp_662b9cc17bd665b9c67c54bf3f3091a1ce361121'''
                 }
             }
         }
@@ -53,14 +56,20 @@ pipeline {
                             $class: 'AmazonWebServicesCredentialsBinding',
                             credentialsId: 'aws'
                         ]]) {
-                             { 
-                                sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/t3p0g8h2"
-                                sh "docker build --no-cache -t backend:${env.BUILD_NUMBER} ."
-                                sh "docker tag backend:${env.BUILD_NUMBER} public.ecr.aws/t3p0g8h2/backend:${env.BUILD_NUMBER}"
-                                sh "docker push public.ecr.aws/t3p0g8h2/backend:${env.BUILD_NUMBER}"
-                            }
+                            sh "aws ecr-public get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.ECR_REPO_URL}"
+                            sh "docker build --no-cache -t backend:${env.IMAGE_TAG} ."
+                            sh "docker tag backend:${env.IMAGE_TAG} ${env.ECR_REPO_URL}/backend:${env.IMAGE_TAG}"
+                            sh "docker push ${env.ECR_REPO_URL}/backend:${env.IMAGE_TAG}"
                         }
                     }
+                }
+            }
+        }
+        stage('Update Kubernetes Deployment') {
+            steps {
+                script {
+                    def updatedYaml = readFile(file: "${env.DEPLOYMENT_YAML}").replace('IMAGE_TAG_PLACEHOLDER', "${env.ECR_REPO_URL}/backend:${env.IMAGE_TAG}")
+                    writeFile(file: "${env.DEPLOYMENT_YAML}", text: updatedYaml)
                 }
             }
         }
