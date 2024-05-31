@@ -1,3 +1,4 @@
+# Use the official Node.js 16 image based on Alpine Linux
 FROM node:16-alpine
 
 # Install curl
