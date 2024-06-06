@@ -38,7 +38,7 @@ resource "aws_instance" "web" {
   user_data              = templatefile("./install_jenkins.sh", {})
 
   tags = {
-    Name = "amazon clone"
+    Name = "Chat app"
   }
   root_block_device {
     volume_size = 30
