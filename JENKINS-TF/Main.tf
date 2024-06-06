@@ -47,7 +47,7 @@ resource "aws_instance" "web" {
 resource "aws_instance" "web2" {
   ami                    = "ami-0c7217cdde317cfec"
   instance_type          = "t2.medium"
-  key_name               = "my key"
+  key_name               = "apsouth"
   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
   tags = {
     Name = "Monitering via grafana"
