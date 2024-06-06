@@ -1,11 +1,14 @@
-resource "aws_security_group" "Jenkins-sg" {
-  name        = "Jenkins-Security Group"
-  description = "Open 22,443,80,8080,9000,9100,9090,3000"
+provider "aws" {
+  region = "ap-south-1"
+}
 
-  # Define a single ingress rule to allow traffic on all specified ports
+resource "aws_security_group" "Jenkins-sg" {
+  name        = "Jenkins-Security-Group"
+  description = "Open 22, 443, 80, 8080, 9000, 9100, 9090, 3000"
+
   ingress = [
-    for port in [22, 80, 443, 8080, 9000,9100,9090,3000] : {
-      description      = "TLS from VPC"
+    for port in [22, 80, 443, 8080, 9000, 9100, 9090, 3000] : {
+      description      = "Allow traffic on port ${port}"
       from_port        = port
       to_port          = port
       protocol         = "tcp"
@@ -29,7 +32,6 @@ resource "aws_security_group" "Jenkins-sg" {
   }
 }
 
-
 resource "aws_instance" "web" {
   ami                    = "ami-0c7217cdde317cfec"
   instance_type          = "t2.large"
@@ -40,18 +42,22 @@ resource "aws_instance" "web" {
   tags = {
     Name = "Chat app"
   }
+
   root_block_device {
     volume_size = 30
   }
 }
+
 resource "aws_instance" "web2" {
   ami                    = "ami-0c7217cdde317cfec"
   instance_type          = "t2.medium"
   key_name               = "apsouth"
   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
+
   tags = {
-    Name = "Monitering via grafana"
+    Name = "Monitoring via Grafana"
   }
+
   root_block_device {
     volume_size = 30
   }
