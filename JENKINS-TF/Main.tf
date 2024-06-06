@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "ap-south-1"
-}
-
 resource "aws_security_group" "Jenkins-sg" {
   name        = "Jenkins-Security-Group"
   description = "Open 22, 443, 80, 8080, 9000, 9100, 9090, 3000"
