@@ -10,7 +10,7 @@ const socket = require("socket.io");
 
 // Use environment variables for MongoDB URL
 const MONGO_URL = process.env.MONGO_CONN_STR;
-console.log("MongoDB URL:", MONGO_URL);
+console.log("MongoDB URL:", MONGO_CONN_STR);
 
 
 const startServer = () => {
@@ -30,7 +30,7 @@ const startServer = () => {
 
   const io = socket(server, {
     cors: {
-      origin: process.env.FRONTENDURL,
+      origin: "",
       credentials: true,
     },
   });
@@ -65,7 +65,7 @@ const startServer = () => {
 };
 
 // Connect to MongoDB and start the server
-mongoose.connect(MONGO_URL, {
+mongoose.connect(MONGO_CONN_STR, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 10000, // 10 seconds timeout
