@@ -8,9 +8,8 @@ require("dotenv").config();
 const app = express();
 const socket = require("socket.io");
 
-// Use environment variables for MongoDB URL and port
+// Use environment variables for MongoDB URL
 const MONGO_URL = process.env.MONGO_URL;
-const PORT = process.env.PORT || 5000;
 
 const startServer = () => {
   app.use(cors());
@@ -23,13 +22,13 @@ const startServer = () => {
   app.use("/api/auth", authRoutes);
   app.use("/api/messages", messageRoutes);
 
-  const server = app.listen(PORT, () => {
-    console.log(`Server started on ${PORT}`);
+  const server = app.listen(5000, () => {
+    console.log(`Server started on port 5000`);
   });
 
   const io = socket(server, {
     cors: {
-      origin: "http://a414bbb94e84e419eaae85945853962a-373392892.us-east-1.elb.amazonaws.com:5000",
+      origin: process.env.FRONTENDURL,
       credentials: true,
     },
   });
@@ -51,7 +50,7 @@ const startServer = () => {
 
   // Additional connection event listeners
   mongoose.connection.on('connected', () => {
-    console.log('Mongoose connected to DBsss');
+    console.log('Mongoose connected to DB');
   });
 
   mongoose.connection.on('error', (err) => {
@@ -70,7 +69,7 @@ mongoose.connect(MONGO_URL, {
   serverSelectionTimeoutMS: 10000, // 10 seconds timeout
 })
 .then(() => {
-  console.log('MongoDB connection successfulllllllllllyyyyyy');
+  console.log('MongoDB connection successful');
   startServer();
 })
 .catch((err) => {

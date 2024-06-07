@@ -28,8 +28,6 @@ spec:
         image: 407622020962.dkr.ecr.us-east-1.amazonaws.com/backend:latest
         imagePullPolicy: Always
         env:
-          - name: MONGO_CONN_STR
-            value: mongodb://mongodb-svc:27017/todo?directConnection=true
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:
@@ -40,6 +38,8 @@ spec:
               secretKeyRef:
                 name: mongo-sec
                 key: password
+          - name: MONGO_CONN_STR
+            value: "mongodb+srv://$(MONGO_USERNAME):$(MONGO_PASSWORD)@cluster0.n7msjwt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
         ports:
         - containerPort: 3500
         livenessProbe: 
