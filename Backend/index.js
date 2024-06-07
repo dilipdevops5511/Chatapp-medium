@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 // Use environment variables for MongoDB credentials
 const MONGO_USERNAME = process.env.MONGO_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
