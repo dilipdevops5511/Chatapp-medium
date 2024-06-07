@@ -9,7 +9,7 @@ const app = express();
 const socket = require("socket.io");
 
 // Use environment variables for MongoDB URL
-const MONGO_URL = process.env.MONGO_URL;
+const MONGO_URL = process.env.MONGO_CONN_STR;
 console.log("MongoDB URL:", MONGO_URL);
 
 
