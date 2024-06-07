@@ -10,6 +10,8 @@ const socket = require("socket.io");
 
 // Use environment variables for MongoDB URL
 const MONGO_URL = process.env.MONGO_URL;
+console.log("MongoDB URL:", MONGO_URL);
+
 
 const startServer = () => {
   app.use(cors());
