@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: 
+metadata:
   name: api
   namespace: prod
-  labels: 
+  labels:
     role: api
     env: demo
-spec: 
+spec:
   replicas: 2
-  strategy: 
+  strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 25%
-  selector: 
+  selector:
     matchLabels:
       role: api
   template:
@@ -40,16 +40,3 @@ spec:
                 key: password
         ports:
         - containerPort: 5000
-        livenessProbe: 
-          httpGet:
-            path: /ok
-            port: 5000
-          initialDelaySeconds: 2
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /ok
-            port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          successThreshold: 1
