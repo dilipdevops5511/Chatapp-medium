@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: stage
+  namespace: prod
   labels:
     role: frontend
     env: demo
@@ -29,6 +29,6 @@ spec:
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://www.devopschennai.dns-dynamic.net"
+            value: "http://backend.dilipdevsecops.in"
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
