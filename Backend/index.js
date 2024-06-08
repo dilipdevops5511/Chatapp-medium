@@ -19,7 +19,7 @@ console.log("MONGO_USERNAME:", MONGO_USERNAME);
 console.log("MONGO_PASSWORD:", MONGO_PASSWORD);
 
 // Construct MongoDB connection string using the credentials
-const MONGO_CONN_STR = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.n7msjwt.mongodb.net`;
+const MONGO_CONN_STR = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.n7msjwt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Enable debug logging for Mongoose
 mongoose.set('debug', true);
