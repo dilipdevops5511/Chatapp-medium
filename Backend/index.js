@@ -16,8 +16,10 @@ const MONGO_USERNAME = process.env.MONGO_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 
 // Construct MongoDB connection string using the credentials
-const MONGO_CONN_STR = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.n7msjwt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const MONGO_CONN_STR = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.n7msjwt.mongodb.net/?retryWrites=true&w=majority`;
 console.log(MONGO_CONN_STR)
+
+
 
 const startServer = () => {
   app.use(cors());
