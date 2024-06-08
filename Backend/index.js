@@ -8,7 +8,7 @@ require("dotenv").config();
 const app = express();
 
 // Use environment variables for MongoDB credentials
-const PORT = "5000";
+const PORT = "5001";
 const MONGO_USERNAME = process.env.MONGO_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 
@@ -82,7 +82,7 @@ const server = app.listen(PORT, () => {
 
 const io = socket(server, {
   cors: {
-    origin: "http://a414bbb94e84e419eaae85945853962a-373392892.us-east-1.elb.amazonaws.com:5000",
+    origin: "",
     credentials: true,
   },
 });
