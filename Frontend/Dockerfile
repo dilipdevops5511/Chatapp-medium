@@ -38,6 +38,7 @@ USER nginx
 
 # Expose port 80 for Nginx
 EXPOSE 8080
+EXPOSE 3000
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
