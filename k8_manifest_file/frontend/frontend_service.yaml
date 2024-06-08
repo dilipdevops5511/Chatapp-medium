@@ -8,6 +8,7 @@ spec:
   - port: 8081
     targetPort: 80
     protocol: TCP
-  type: ClusterIP
+    nodePort: 30000  # Specify your desired nodePort here
+  type: NodePort
   selector:
     role: frontend
