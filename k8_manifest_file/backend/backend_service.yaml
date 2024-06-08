@@ -9,6 +9,6 @@ spec:
   - port: 5000
     protocol: TCP
     targetPort: 5000
-    nodePort: 30000 # Specify your desired nodePort here
+    nodePort: 30000
   selector:
     role: backend
