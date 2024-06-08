@@ -4,11 +4,6 @@ FROM node:16-alpine
 # Install curl
 RUN apk update && apk add curl
 
-# Set environment variables
-ENV PORT=5000
-ENV MONGO_USERNAME="app"
-ENV MONGO_PASSWORD="admin"
-
 # Set the working directory
 WORKDIR /app
 
