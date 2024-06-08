@@ -10,6 +10,9 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+# Set DNS server
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # Install dependencies
 RUN npm install
 
