@@ -31,4 +31,4 @@ spec:
           - name: REACT_APP_BACKEND_URL
             value: "http://backend.dilipdevsecops.in"
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
