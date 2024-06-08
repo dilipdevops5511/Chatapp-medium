@@ -1,5 +1,5 @@
-# Use the official Node.js 16 image based on Alpine Linux
-FROM node:16-alpine
+# Use the official Node.js 19.6.1 image based on Alpine Linux
+FROM node:19.6.1-alpine
 
 # Install curl
 RUN apk update && apk add curl
