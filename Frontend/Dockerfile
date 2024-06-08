@@ -36,6 +36,8 @@ RUN touch /var/run/nginx.pid \
 # Switch to nginx user
 USER nginx
 
+ENV REACT_APP_LOCALHOST_KEY="test"
+
 # Expose port 80 for Nginx
 EXPOSE 80
 
