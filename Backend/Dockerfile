@@ -20,7 +20,7 @@ RUN npm install
 COPY . .
 
 # Expose the application port
-EXPOSE 5001
+EXPOSE 5000
 
 # Set environment variables
 #ENV MONGO_USERNAME="app"
