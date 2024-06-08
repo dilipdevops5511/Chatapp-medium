@@ -11,4 +11,4 @@ spec:
     targetPort: 5000
     nodePort: 30000
   selector:
-    role: backend
+    role: api
