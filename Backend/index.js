@@ -9,7 +9,7 @@ require("dotenv").config();
 const app = express();
 
 // Use environment variables for MongoDB credentials and port
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 const MONGO_USERNAME = process.env.MONGO_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 
