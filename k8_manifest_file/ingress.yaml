@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: dilipdevsecops.in
+    - host: backend.dilipdevsecops.in
       http:
         paths:
           - path: /api
