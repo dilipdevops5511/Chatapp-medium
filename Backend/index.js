@@ -9,8 +9,7 @@ const app = express();
 const socket = require("socket.io");
 
 // Use environment variables for MongoDB URL and port
-const MONGO_URL = process.env.MONGO_URL;
-const PORT = process.env.PORT || 5000;
+const PORT = "5000"
 
 // Use environment variables for MongoDB credentials
 const MONGO_USERNAME = process.env.MONGO_USERNAME;
