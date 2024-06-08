@@ -20,8 +20,8 @@ COPY . .
 EXPOSE 5000
 
 # Set environment variables
-ENV MONGO_USERNAME="app"
-ENV MONGO_PASSWORD="admin"
+#ENV MONGO_USERNAME="app"
+#ENV MONGO_PASSWORD="admin"
 
 # Command to run the application
 CMD ["npm", "start"]

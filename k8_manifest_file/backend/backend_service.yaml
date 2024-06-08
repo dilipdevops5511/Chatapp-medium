@@ -8,6 +8,6 @@ spec:
   ports:
   - port: 5000
     protocol: TCP
-  type: ClusterIP
+  type: NodePort
   selector:
    role: backend
