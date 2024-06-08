@@ -14,8 +14,7 @@ const MONGO_USERNAME = process.env.MONGO_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 
 // Construct MongoDB connection string using the credentials
-const MONGO_CONN_STR = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.n7msjwt.mongodb.net`;
-
+const MONGO_CONN_STR = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@ac-zrihgr5-shard-00-00.n7msjwt.mongodb.net:27017,ac-zrihgr5-shard-00-01.n7msjwt.mongodb.net:27017,ac-zrihgr5-shard-00-02.n7msjwt.mongodb.net:27017/?ssl=true&replicaSet=atlas-u6zm18-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0`;
 // Enable debug logging for Mongoose
 mongoose.set('debug', true);
 
