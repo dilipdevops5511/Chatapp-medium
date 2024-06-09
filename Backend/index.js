@@ -21,9 +21,7 @@ mongoose.set('debug', true);
 // Log environment variables
 console.log("Environment Variables:");
 console.log("PORT:", PORT);
-console.log("MONGO_USERNAME:", MONGO_USERNAME);
-console.log("MONGO_PASSWORD:", MONGO_PASSWORD);
-console.log("MongoDB Connection String:", MONGO_CONN_STR);
+
 
 app.use(cors());
 app.use(express.json());
@@ -35,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/ping", (_req, res) => {
-  return res.json({ msg: "pkay ?????huraaaay........You are selected as Devops Engineer" });
+  return res.json({ msg: "Success" });
 });
 
 app.use("/api/auth", authRoutes);
