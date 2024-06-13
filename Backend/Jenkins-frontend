@@ -9,6 +9,7 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         AWS_REGION = 'us-east-1'
         ECR_REPO_URL =  credentials('ECR_REPO_URL')
+        sonar_token =  credentials('sonar-token')
         DEPLOYMENT_YAML = 'k8_manifest_file/frontend/frontend_deployment.yaml'
 
 
@@ -31,7 +32,7 @@ pipeline {
   -Dsonar.projectKey=chat-app-backend \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://54.215.59.176:9000 \
-  -Dsonar.login=squ_732827f8e8b0776707acae85cb596b2c082a2772'''
+  -Dsonar.login=${sonar_token}'''
                 }
             }
         }
@@ -90,7 +91,4 @@ pipeline {
         }
     }
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> ee6ab00 (oaky co,,it)
