@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk'
+        nodejs 'nodejs'
+    }
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+        AWS_REGION = 'us-east-1'
+        ECR_REPO_URL = '637423531852.dkr.ecr.us-east-1.amazonaws.com'
+        DEPLOYMENT_YAML = 'k8_manifest_file/backend/backend_deployment.yaml'
+        sonar-token = credentials('sonar-token')
+
+
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'lock', credentialsId: 'github', url: 'https://github.com/dilipdevops5511/Chatapp-medium.git'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner \
+  -Dsonar.projectKey=chat-app-backend \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=${env.sonar-token} \
+  -Dsonar.login='''
+                }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage('Verify Dockerfile Presence') {
+            steps {
+                script {
+                    dir('Backend') {
+                        sh 'ls -l'
+                        sh 'cat Dockerfile'
+                    }
+                }
+            }
+        }
+        stage('Docker Build & Push') {
+    steps {
+        script {
+            dir('Backend') {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws'
+                ]]) {
+                    def ecrLogin = sh(script: "aws ecr-public get-login-password --region ${env.AWS_REGION}", returnStdout: true).trim()
+                    sh "echo ${ecrLogin} | docker login --username AWS --password-stdin public.ecr.aws"
+                    sh "docker build --no-cache -t backend:${env.IMAGE_TAG} ."
+                    sh "docker tag backend:${env.IMAGE_TAG} ${env.ECR_REPO_URL}/backend:${env.IMAGE_TAG}"
+                    sh "docker push ${env.ECR_REPO_URL}/backend:${env.IMAGE_TAG}"
+                }
+            }
+        }
+    }
+}
+
+        stage('Update Kubernetes Deployment') {
+            steps {
+                script {
+                    def updatedYaml = readFile(file: "${env.DEPLOYMENT_YAML}").replace('IMAGE_TAG_PLACEHOLDER', "${env.ECR_REPO_URL}/backend:${env.IMAGE_TAG}")
+                    writeFile(file: "${env.DEPLOYMENT_YAML}", text: updatedYaml)
+                }
+            }
+        }
+        
+      
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    dir('k8_manifest_file/backend') {
+                        sh "kubectl apply -f ."
+                    }
+                }
+            }
+        }
+    }
+}
