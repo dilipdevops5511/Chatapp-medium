@@ -1,18 +1,18 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: api
+  name: dilipdevsecops-in
   namespace: stage
 spec:
-  secretName: example-com-tls
-  duration: 90d
-  renewBefore: 30d
+  secretName: dilipdevsecops-in-tls
+  duration: 2160h  # 90 days = 2160 hours
+  renewBefore: 720h  # 30 days = 720 hours
   subject:
     organizations:
-      - muthu
+      - Your Organization
   commonName: dilipdevsecops.in
   dnsNames:
-  - dilipdevsecops.in
+    - dilipdevsecops.in
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
