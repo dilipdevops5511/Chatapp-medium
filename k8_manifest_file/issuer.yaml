@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: letsencrypt-staging
-  namespace: your-namespace
+  namespace: stage
 spec:
   acme:
     email: muthu@gmail.com
