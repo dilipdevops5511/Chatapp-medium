@@ -1,15 +1,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: example-com
-  namespace: your-namespace
+  name: api
+  namespace: stage
 spec:
   secretName: example-com-tls
   duration: 90d
   renewBefore: 30d
   subject:
     organizations:
-      - Your Organization
+      - muthu
   commonName: dilipdevsecops.in
   dnsNames:
   - dilipdevsecops.in
