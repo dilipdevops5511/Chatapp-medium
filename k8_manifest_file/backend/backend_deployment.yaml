@@ -25,7 +25,7 @@ spec:
       - name: ecr-registry-secret
       containers:
       - name: api
-        image: IMAGE_TAG_PLACEHOLDER
+        image: 762383633623.dkr.ecr.us-east-1.amazonaws.com/backend:latest
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR
