@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
-  namespace: stage
+  namespace: prod
   labels:
     role: api
     env: demo
@@ -28,8 +28,6 @@ spec:
         image: 762383633623.dkr.ecr.us-east-1.amazonaws.com/backend:latest
         imagePullPolicy: Always
         env:
-          - name: MONGO_CONN_STR
-            value: mongodb://mongodb-svc:27017/todo?directConnection=true
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:
@@ -41,4 +39,4 @@ spec:
                 name: mongo-sec
                 key: password
         ports:
-        - containerPort: 3500
+        - containerPort: 5000
