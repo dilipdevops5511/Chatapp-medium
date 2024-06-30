@@ -5,7 +5,7 @@ metadata:
   namespace: stage
   labels:
     role: api
-    env: demo
+    env: stage
 spec:
   replicas: 2
   strategy:
