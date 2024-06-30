@@ -2,26 +2,26 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mainlb
-  namespace: stage  # Replace with your namespace
+  namespace: stage 
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Reference the ClusterIssuer
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" 
 spec:
   ingressClassName: alb
   tls:
     - hosts:
-        - clients.api.deltacapita.com  # Replace with your domain
-      secretName: clients-api-deltacapita-com-tls  # Adjusted to match cert-manager's expected format
+        - clients.api.deltacapita.com 
+      secretName: clients-api-deltacapita-com-tls  
   rules:
-    - host: clients.api.deltacapita.com  # Replace with your domain
+    - host: clients.api.deltacapita.com 
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: api  # Replace with your backend service name
+                name: api  
                 port:
-                  number: 80  # Replace with your backend service port
+                  number: 5000  
